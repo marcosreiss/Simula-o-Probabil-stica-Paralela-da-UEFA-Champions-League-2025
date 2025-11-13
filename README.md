@@ -1,7 +1,3 @@
-Claro! Aqui está **todo o conteúdo exatamente como você enviou**, apenas transcrito como **texto puro**, sem alterações:
-
----
-
 # ⚽ Simulador Monte Carlo - UEFA Champions League 2025
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
