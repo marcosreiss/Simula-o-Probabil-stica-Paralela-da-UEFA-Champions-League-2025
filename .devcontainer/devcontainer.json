@@ -1,0 +1,18 @@
+{
+    "name": "Simulador Monte Carlo - C/OpenMPI",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder}/src,target=/workspace/src,type=bind"
+    ],
+    "workspaceFolder": "/workspace",
+    "remoteUser": "root"
+}
