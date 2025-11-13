@@ -1,50 +1,35 @@
-#include <mpi.h>
-#include <omp.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "teams.h"
+#include "sim.h"
+#include "stats.h"
+#include "random_utils.h"
 
-int main(int argc, char** argv) {
-    MPI_Init(&argc, &argv);
-
-    int world_rank, world_size;
-
-    MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &world_size);
-
-    // Semente aleatória diferente por processo
-    srand(time(NULL) + world_rank);
-
-    // Cada processo MPI fará uma "simulação paralela" com OpenMP
-    int gols_local = 0;
-
-    #pragma omp parallel reduction(+:gols_local)
-    {
-        int thread_id = omp_get_thread_num();
-        unsigned int seed = time(NULL) + thread_id + world_rank * 100;
-
-        // Exemplo: 1000 iterações Monte Carlo por thread
-        for (int i = 0; i < 1000; i++) {
-            double r = rand_r(&seed) / (double)RAND_MAX;
-
-            // Suponha que a chance de gol seja 10%
-            if (r < 0.10) {
-                gols_local++;
-            }
-        }
+int main(int argc, char *argv[]) {
+    int N = 1000; // número de simulações (pode ler da linha de comando)
+    if (argc > 1) {
+        N = atoi(argv[1]);
     }
 
-    // Reduce: soma todos os resultados dos processos
-    int gols_total = 0;
-    MPI_Reduce(&gols_local, &gols_total, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    Time times[NUM_TIMES];
+    Estatisticas estat_global, estat_local;
 
-    if (world_rank == 0) {
-        printf("=== Teste MPI + OpenMP ===\n");
-        printf("Total de processos MPI: %d\n", world_size);
-        printf("Gols simulados (Monte Carlo simplificado): %d\n", gols_total);
-        printf("Ambiente funcionando corretamente! 🎉\n");
+    carregar_times(times);
+    calcular_forcas(times, NUM_TIMES);
+    zerar_estatisticas(&estat_global);
+
+    init_random_seed(0);
+
+    for (int i = 0; i < N; i++) {
+        zerar_estatisticas(&estat_local);
+        simular_campeonato(times, &estat_local);
+        acumular_estatisticas(&estat_global, &estat_local);
     }
 
-    MPI_Finalize();
+    // imprimir probabilidades
+    for (int i = 0; i < NUM_TIMES; i++) {
+        double p_titulo = (double)estat_global.titulos[i] / (double)N * 100.0;
+        printf("%s: %.2f%% títulos\n", times[i].nome, p_titulo);
+    }
+
     return 0;
 }
