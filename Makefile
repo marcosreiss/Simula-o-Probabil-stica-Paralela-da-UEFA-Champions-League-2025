@@ -29,7 +29,7 @@ mpi: $(SOURCES)
 
 # Rodar versão serial
 run: serial
-	./$(TARGET_SERIAL) 10000
+	./$(TARGET_SERIAL) 10000000
 
 # Rodar versão OpenMP
 run-omp: omp
