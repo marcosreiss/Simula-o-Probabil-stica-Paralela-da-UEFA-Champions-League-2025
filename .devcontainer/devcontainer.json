@@ -13,5 +13,5 @@
     // Monta todo o projeto automaticamente
     "workspaceFolder": "/workspace",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-    "remoteUser": "root"
+    "remoteUser": "devuser"
 }

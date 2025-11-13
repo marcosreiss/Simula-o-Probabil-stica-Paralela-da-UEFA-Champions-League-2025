@@ -12,4 +12,7 @@ RUN apt update && apt install -y \
     vim \
     && apt clean
 
+# Criar usuário normal
+RUN useradd -m devuser
+USER devuser
 WORKDIR /workspace
