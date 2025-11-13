@@ -9,13 +9,25 @@ typedef struct {
     int gols_b;
 } ResultadoJogo;
 
-void embaralhar_times(Time *vet, int n);
-void sortear_grupos(Time pote1[], Time pote2[], Time pote3[], Grupo grupos[NUM_GRUPOS]);
-ResultadoJogo simular_jogo(Time *a, Time *b);
-void simular_fase_grupos(Grupo grupos[NUM_GRUPOS], Time *classificados[8]);
-void simular_mata_mata(Time *classificados[8], Time **quartas_out[8],
-                       Time **semis_out[4], Time **final_out[2], Time **campeao_out);
+/* Funções auxiliares */
+void embaralhar_times(Time **vet, int n);
 
+/* Sorteio dos grupos */
+void sortear_grupos(Time *pote1[TIMES_POR_POTE], 
+                    Time *pote2[TIMES_POR_POTE], 
+                    Time *pote3[TIMES_POR_POTE], 
+                    Grupo grupos[NUM_GRUPOS]);
+
+/* Simulação de partidas */
+ResultadoJogo simular_jogo(Time *a, Time *b);
+
+/* Fase de grupos */
+void simular_fase_grupos(Grupo grupos[NUM_GRUPOS], Time *classificados[8]);
+
+/* Mata-mata */
+void simular_mata_mata(Time *classificados[8], Time **campeao);
+
+/* Função principal: simula uma edição completa da Champions */
 void simular_campeonato(Time times[], Estatisticas *estat_local);
 
 #endif

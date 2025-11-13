@@ -13,9 +13,8 @@ typedef struct {
 
 void zerar_estatisticas(Estatisticas *e);
 void acumular_estatisticas(Estatisticas *global, Estatisticas *local);
-void registrar_resultado_torneio(Estatisticas *e, Time *classificados_quartas[],
-                                 Time *classificados_semis[],
-                                 Time *finalistas[],
-                                 Time *campeao);
+void registrar_campeao(Estatisticas *e, Time *campeao);
+void registrar_classificados(Estatisticas *e, Time *classificados[], int n_classificados);
+void imprimir_estatisticas(Estatisticas *e, Time times[], long long total_simulacoes);
 
 #endif
