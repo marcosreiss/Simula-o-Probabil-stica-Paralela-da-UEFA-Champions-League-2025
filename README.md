@@ -48,8 +48,6 @@ cd simulador-champions-montecarlo
 
 ```
 
-text
-
 ### 3️⃣ Abra no VS Code
 
 ```
@@ -57,7 +55,6 @@ code .
 
 ```
 
-text
 
 ### 4️⃣ Reabra no container
 
@@ -95,7 +92,7 @@ make run-mpi
 
 ```
 
-text
+
 
 ---
 
@@ -127,8 +124,6 @@ simulador-champions-montecarlo/
 
 ```
 
-text
-
 ---
 
 ## 🛠️ Comandos Úteis
@@ -143,7 +138,6 @@ make clean    # Remove executáveis
 
 ```
 
-text
 
 ### Execução
 
@@ -168,7 +162,6 @@ mpirun -np 8 ./simulador_mpi 10000000
 
 ```
 
-text
 
 ### Debug
 
@@ -177,7 +170,6 @@ gdb ./simulador_serial
 
 ```
 
-text
 
 ---
 
@@ -202,7 +194,7 @@ gols = poisson(λ)
 
 ```
 
-text
+
 
 ---
 
@@ -282,7 +274,7 @@ Contribuições são **muito bem-vindas**! Este é um projeto educacional e cola
 
 ---
 
-## 🎓 Contexto Acadêmico
+## 🎓 Cono Acadêmico
 
 Este projeto foi desenvolvido como trabalho da disciplina de **Programação Paralela** ministrada pelo Prof. Omar Andres Carmona Cortes, com foco em:
 
@@ -315,8 +307,8 @@ Este projeto está sob a licença MIT. Veja o arquivo **LICENSE** para mais deta
 
 **Marcos Vinicius Santos da Silva Reis**
 
-- GitHub: [https://github.com/seu-usuario](https://github.com/marcosreiss)
-- LinkedIn: [https://linkedin.com/in/seu-perfil](https://www.linkedin.com/in/marcosvinireis/)
+- GitHub: [https://github.com/marcosreiss/](https://github.com/marcosreiss)
+- LinkedIn: [https://github.com/marcosreiss/](https://www.linkedin.com/in/marcosvinireis/)
 
 ---
 
