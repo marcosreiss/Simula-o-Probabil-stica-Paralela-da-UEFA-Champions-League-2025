@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
     Estatisticas estat_global;
     zerar_estatisticas(&estat_global);
 
-    // ===== MUDANÇA AQUI: clock_gettime() =====
     struct timespec inicio, fim;
     clock_gettime(CLOCK_MONOTONIC, &inicio);
 

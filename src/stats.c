@@ -24,7 +24,6 @@ void registrar_campeao(Estatisticas *e, Time *campeao)
     if (campeao != NULL)
     {
         e->titulos[campeao->id]++;
-        e->finais[campeao->id]++;
     }
 }
 

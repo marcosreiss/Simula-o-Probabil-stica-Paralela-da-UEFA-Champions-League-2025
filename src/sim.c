@@ -229,7 +229,7 @@ Time *simular_partida_mata_mata(Time *a, Time *b)
     return (a->forca > b->forca) ? a : b;
 }
 
-void simular_mata_mata(Time *classificados[8], Time **campeao)
+void simular_mata_mata(Time *classificados[8], Time **campeao, Estatisticas *e)
 {
     Time *quartas[4];
     Time *semis[2];
@@ -244,8 +244,27 @@ void simular_mata_mata(Time *classificados[8], Time **campeao)
     semis[0] = simular_partida_mata_mata(quartas[0], quartas[1]);
     semis[1] = simular_partida_mata_mata(quartas[2], quartas[3]);
 
+    // Registra os 4 semifinalistas
+    for (int i = 0; i < 4; i++)
+    {
+        if (quartas[i] != NULL)
+        {
+            e->semis[quartas[i]->id]++;
+        }
+    }
+
     // Final
     *campeao = simular_partida_mata_mata(semis[0], semis[1]);
+
+    // Registra os 2 finalistas
+    if (semis[0] != NULL)
+    {
+        e->finais[semis[0]->id]++;
+    }
+    if (semis[1] != NULL)
+    {
+        e->finais[semis[1]->id]++;
+    }
 }
 
 /* ========== ORQUESTRAÇÃO ========== */
@@ -263,7 +282,7 @@ void simular_campeonato(Time times[], Estatisticas *estat_local)
     montar_potes(times, pote1, pote2, pote3);
     sortear_grupos(pote1, pote2, pote3, grupos);
     simular_fase_grupos(grupos, classificados);
-    simular_mata_mata(classificados, &campeao);
+    simular_mata_mata(classificados, &campeao, estat_local);
 
     registrar_campeao(estat_local, campeao);
     registrar_classificados(estat_local, classificados, 8);
