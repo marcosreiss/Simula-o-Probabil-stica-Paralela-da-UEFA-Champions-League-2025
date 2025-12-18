@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
     printf("Modo: OPENMP\n");
     printf("Número de simulações: %lld\n", num_simulacoes);
 
-    // Detecta e exibe número de threads
     int num_threads;
 #pragma omp parallel
     {
@@ -49,26 +48,20 @@ int main(int argc, char *argv[])
 
     printf("Iniciando simulações...\n");
 
-// Região paralela OpenMP
 #pragma omp parallel
     {
-        // Cada thread tem sua própria estatística local
         Estatisticas estat_thread;
         zerar_estatisticas(&estat_thread);
 
-        // Inicializa seed única por thread
         int thread_id = omp_get_thread_num();
-        init_random_seed(thread_id * 1000 + time(NULL));
+        init_random_seed(thread_id * 1000 + (unsigned int)time(NULL));
 
-// Distribui o loop entre threads
 #pragma omp for schedule(dynamic, 10000)
         for (long long sim = 0; sim < num_simulacoes; sim++)
         {
-            // OTIMIZAÇÃO: Acumula direto em estat_thread, sem estat_local intermediária
             simular_campeonato(times, &estat_thread);
         }
 
-// Merge thread-safe das estatísticas (apenas uma vez por thread)
 #pragma omp critical
         {
             acumular_estatisticas(&estat_global, &estat_thread);
@@ -77,7 +70,6 @@ int main(int argc, char *argv[])
 
     clock_gettime(CLOCK_MONOTONIC, &fim);
 
-    // Calcula tempo decorrido (wall-clock time)
     double tempo_total = (fim.tv_sec - inicio.tv_sec) +
                          (fim.tv_nsec - inicio.tv_nsec) / 1e9;
 
@@ -85,8 +77,7 @@ int main(int argc, char *argv[])
     printf("Tempo de execução (wall-clock): %.4f segundos\n", tempo_total);
     printf("Simulações por segundo: %.0f\n", num_simulacoes / tempo_total);
 
-    // Calcula speedup real
-    double tempo_serial_ref = 111.93; // Seu tempo serial de referência
+    double tempo_serial_ref = 111.93;
     double speedup_real = tempo_serial_ref / tempo_total;
     printf("Speedup real: %.2fx (vs %.2fs serial)\n", speedup_real, tempo_serial_ref);
     printf("Eficiência paralela: %.1f%%\n\n", (speedup_real / num_threads) * 100.0);
