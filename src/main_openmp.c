@@ -61,25 +61,14 @@ int main(int argc, char *argv[])
         init_random_seed(thread_id * 1000 + time(NULL));
 
 // Distribui o loop entre threads
-#pragma omp for
+#pragma omp for schedule(dynamic, 10000)
         for (long long sim = 0; sim < num_simulacoes; sim++)
         {
-            Estatisticas estat_local;
-            zerar_estatisticas(&estat_local);
-
-            simular_campeonato(times, &estat_local);
-            acumular_estatisticas(&estat_thread, &estat_local);
-
-            // Progresso (apenas thread 0, aproximado)
-            if (thread_id == 0 && (sim + 1) % (num_simulacoes / 10) == 0)
-            {
-                printf("Progresso: ~%lld/%lld (~%.0f%%)\n",
-                       sim + 1, num_simulacoes,
-                       ((double)(sim + 1) / num_simulacoes) * 100.0);
-            }
+            // OTIMIZAÇÃO: Acumula direto em estat_thread, sem estat_local intermediária
+            simular_campeonato(times, &estat_thread);
         }
 
-// Merge thread-safe das estatísticas
+// Merge thread-safe das estatísticas (apenas uma vez por thread)
 #pragma omp critical
         {
             acumular_estatisticas(&estat_global, &estat_thread);
@@ -95,7 +84,12 @@ int main(int argc, char *argv[])
     printf("\nSimulações concluídas!\n");
     printf("Tempo de execução (wall-clock): %.4f segundos\n", tempo_total);
     printf("Simulações por segundo: %.0f\n", num_simulacoes / tempo_total);
-    printf("Speedup teórico máximo: %dx (baseado em %d threads)\n\n", num_threads, num_threads);
+
+    // Calcula speedup real
+    double tempo_serial_ref = 111.93; // Seu tempo serial de referência
+    double speedup_real = tempo_serial_ref / tempo_total;
+    printf("Speedup real: %.2fx (vs %.2fs serial)\n", speedup_real, tempo_serial_ref);
+    printf("Eficiência paralela: %.1f%%\n\n", (speedup_real / num_threads) * 100.0);
 
     imprimir_estatisticas(&estat_global, times, num_simulacoes);
 
