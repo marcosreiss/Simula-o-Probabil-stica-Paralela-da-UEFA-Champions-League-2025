@@ -3,12 +3,16 @@ CFLAGS = -Wall -O3 -lm -fopenmp
 SRC_DIR = src
 INC_DIR = include
 
-# Arquivos fonte
-SOURCES = $(SRC_DIR)/main.c \
-          $(SRC_DIR)/teams.c \
-          $(SRC_DIR)/random_utils.c \
-          $(SRC_DIR)/sim.c \
-          $(SRC_DIR)/stats.c
+# Arquivos fonte comuns
+COMMON_SOURCES = $(SRC_DIR)/teams.c \
+                 $(SRC_DIR)/random_utils.c \
+                 $(SRC_DIR)/sim.c \
+                 $(SRC_DIR)/stats.c
+
+# Arquivos fonte específicos por versão
+SOURCES_SERIAL = $(SRC_DIR)/main.c $(COMMON_SOURCES)
+SOURCES_OMP = $(SRC_DIR)/main_openmp.c $(COMMON_SOURCES)
+SOURCES_MPI = $(SRC_DIR)/main_mpi.c $(COMMON_SOURCES)
 
 # Executáveis
 TARGET_SERIAL = simulador_serial
@@ -16,16 +20,16 @@ TARGET_OMP = simulador_omp
 TARGET_MPI = simulador_mpi
 
 # Compilação da versão serial
-serial: $(SOURCES)
-	$(CC) -I$(INC_DIR) $(SOURCES) -o $(TARGET_SERIAL) -lm
+serial: $(SOURCES_SERIAL)
+	$(CC) -I$(INC_DIR) $(SOURCES_SERIAL) -o $(TARGET_SERIAL) -lm
 
 # Compilação da versão OpenMP
-omp: $(SOURCES)
-	$(CC) -I$(INC_DIR) $(SOURCES) -o $(TARGET_OMP) -fopenmp -lm
+omp: $(SOURCES_OMP)
+	$(CC) -I$(INC_DIR) $(SOURCES_OMP) -o $(TARGET_OMP) -fopenmp -lm
 
 # Compilação da versão MPI
-mpi: $(SOURCES)
-	mpicc -I$(INC_DIR) $(SOURCES) -o $(TARGET_MPI) -lm
+mpi: $(SOURCES_MPI)
+	mpicc -I$(INC_DIR) $(SOURCES_MPI) -o $(TARGET_MPI) -lm
 
 # Rodar versão serial
 run: serial
@@ -33,11 +37,11 @@ run: serial
 
 # Rodar versão OpenMP
 run-omp: omp
-	./$(TARGET_OMP) 10000
+	./$(TARGET_OMP) 10000000
 
 # Rodar versão MPI
 run-mpi: mpi
-	mpirun -np 4 ./$(TARGET_MPI) 10000
+	mpirun -np 4 ./$(TARGET_MPI) 10000000
 
 # Limpar executáveis
 clean:
